@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import pandas as pd
 pd.Series? 
 
@@ -39,3 +40,14 @@ for col in df.columns:
     if col[:1]=='№':
         df.rename(columns={col:'#' + col[1:]}, inplace=True) 
  #this renames the columns to someting more reader-friendly
+=======
+import pandas as pd
+pd.Series? 
+
+#gives you an explanation of series data structure
+
+animals = ["tiger", "bear", "moose"]
+pd.Sereis(animals)
+
+
+>>>>>>> b2198fc90cc9c6430d13b14119bb247fa7e4fdb4
