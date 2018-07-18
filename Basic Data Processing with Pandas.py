@@ -51,3 +51,36 @@ for col in df.columns:
 
 
  #Indexing Dataframes
+df['country'] = df.index
+df = df.set_index('Gold') 
+#settimg index to number of gold medal won
+df = df.reset_index()
+#creats an actual column of index
+
+df = pd.read_csv('census.csv')
+df['SUMLEV'].unique()
+#this function returns the two unique value in this column
+df=df[df['SUMLEV'] == 50]
+columns_to_keep = ['STNAME',
+                   'CTYNAME',
+                   'BIRTHS2010',
+                   'BIRTHS2011',
+                   'BIRTHS2012',
+                   'BIRTHS2013',
+                   'BIRTHS2014',
+                   'BIRTHS2015',
+                   'POPESTIMATE2010',
+                   'POPESTIMATE2011',
+                   'POPESTIMATE2012',
+                   'POPESTIMATE2013',
+                   'POPESTIMATE2014',
+                   'POPESTIMATE2015']
+df = df[columns_to_keep]
+df = df.set_index(['STNAME', 'CTYNAME'])
+#you can set multiple indexes
+
+df.head() #this gives you the first 5 rows of the data
+
+df.loc['Michigan', 'Washtenaw County']
+df.loc[ [('Michigan', 'Washtenaw County'),
+         ('Michigan', 'Wayne County')] ]
