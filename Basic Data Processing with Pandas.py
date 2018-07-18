@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import pandas as pd
 pd.Series? 
 
@@ -40,14 +39,15 @@ for col in df.columns:
     if col[:1]=='№':
         df.rename(columns={col:'#' + col[1:]}, inplace=True) 
  #this renames the columns to someting more reader-friendly
-=======
-import pandas as pd
-pd.Series? 
 
-#gives you an explanation of series data structure
+ #Querying data using boolean mask
+ df['Gold'] > 0 #this creats a boolean mask
+ only_gold = df.where(df['Gold'] > 0) #overlayig with original
+ #daraframe
+ only_gold = only_gold.dropna() #dropping NaNs
 
-animals = ["tiger", "bear", "moose"]
-pd.Sereis(animals)
+ only_gold = df[df['Gold'] > 0] 
+ #a more concise way to write the block above this code
 
 
->>>>>>> b2198fc90cc9c6430d13b14119bb247fa7e4fdb4
+ #Indexing Dataframes
