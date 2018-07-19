@@ -83,4 +83,7 @@ df.head() #this gives you the first 5 rows of the data
 
 df.loc['Michigan', 'Washtenaw County']
 df.loc[ [('Michigan', 'Washtenaw County'),
-         ('Michigan', 'Wayne County')] ]
+         ('Michigan', 'Wayne Counnty')] ]
+
+df.loc[df['Gold'] > 0]
+
