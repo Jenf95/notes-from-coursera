@@ -87,3 +87,4 @@ df.loc[ [('Michigan', 'Washtenaw County'),
 
 df.loc[df['Gold'] > 0]
 
+ new_set = df.where((df.loc[:,"Gold"] > 0) & (df.loc[:,"Gold.1"] > 0))
