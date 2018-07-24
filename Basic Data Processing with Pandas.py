@@ -124,4 +124,15 @@ def answer_six():
     top3 = states_pop.nlargest(3,'pop')
     return list(top3.index)
 
-answer_six()
+ q7 = census_df.copy()
+ q7 = q7[q7["SUMLEV"] == 50]
+ columns_to_keep = ["CTYNAME", "POPESTIMATE2010", "POPESTIMATE2011", "POPESTIMATE2012", "POPESTIMATE2013", "POPESTIMATE2014", "POPESTIMATE2015"]
+ q7 = q7[columns_to_keep]
+ index = (q7.max(axis=1)-q7.min(axis=1)).argmax()
+ return census_df.loc[index]['CTYNAME']
+
+
+census_df = census_df.where((census_df["REGION"] ==1) | (census_df["REGION"] == 2)) 
+census_df = census_df.where(census_df["CTYNAME"] == "Washington County")
+census_df = census_df.where(census_df["POPESTIMATE2015"] > census_df["POPESTIMATE2014"])
+census_df.dropna()
