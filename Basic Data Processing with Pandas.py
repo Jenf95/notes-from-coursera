@@ -88,3 +88,51 @@ df.loc[ [('Michigan', 'Washtenaw County'),
 df.loc[df['Gold'] > 0]
 
  new_set = df.where((df.loc[:,"Gold"] > 0) & (df.loc[:,"Gold.1"] > 0))
+
+ #using groupby
+ unique_counties = df.groupby("STNAME")['COUNTY'].nunique()
+
+
+q6 = census_df
+q6 = q6.set_index([ "STNAME", "CTYNAME"])
+s = q6["CENSUS2010POP"]
+s.groupby(level = "STNAME").nlargest(3)
+#returns a series not a dataframe
+
+
+#Pandas Intro
+df.head()
+df.tail()
+copy_df = df.copy() #copying the dataframe
+df.index
+df.columns
+df.values
+df.describe() # a quick statistic summary of your data
+df.T #swtiching columns and rows
+df.sort_index(axis = 1, ascending=False) #sorting by an axis
+df.sort_values(by="CENSUS2010POP") #ascending sort
+df["STNAME"] or df."STNAME" #selects a column, which yields s Series
+df[0:3] #or you can slice by lable, slices rows
+
+
+def answer_six():
+    copy_df = census_df.copy()
+    copy_df = copy_df.groupby(['STNAME'])
+    states_pop = pd.DataFrame(columns=['pop'])
+    for i, c in copy_df:
+        states_pop.loc[i] = [c.sort_values(by='CENSUS2010POP', ascending=False)[1:4]['CENSUS2010POP'].sum()]
+    top3 = states_pop.nlargest(3,'pop')
+    return list(top3.index)
+
+ q7 = census_df.copy()
+ q7 = q7[q7["SUMLEV"] == 50]
+ columns_to_keep = ["CTYNAME", "POPESTIMATE2010", "POPESTIMATE2011", "POPESTIMATE2012", "POPESTIMATE2013", "POPESTIMATE2014", "POPESTIMATE2015"]
+ q7 = q7[columns_to_keep]
+ index = (q7.max(axis=1)-q7.min(axis=1)).argmax()
+ return census_df.loc[index]['CTYNAME']
+
+
+census_df = census_df.where((census_df["REGION"] ==1) | (census_df["REGION"] == 2)) 
+census_df = census_df.where(census_df["CTYNAME"] == "Washington County")
+census_df = census_df.where(census_df["POPESTIMATE2015"] > census_df["POPESTIMATE2014"])
+census_df.dropna()
