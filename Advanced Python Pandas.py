@@ -1,4 +1,4 @@
-import panda as pd
+import pandas as pd
 df = pd.DataFrame([{'Name': 'Chris', 'Item Purchased': 'Sponge', 'Cost': 22.50},
                    {'Name': 'Kevyn', 'Item Purchased': 'Kitty Litter', 'Cost': 2.50},
                    {'Name': 'Filip', 'Item Purchased': 'Spoon', 'Cost': 5.00}],
@@ -167,3 +167,18 @@ df.diff() #the difference between each value across index
 df.asfreq('W', method='ffill') #change frequency to weekly from bi-weekly, forward fill missing values
 
 
+
+import pandas as pd
+import numpy as np
+
+energy = pd.read_excel("Energy Indicators.xls")
+energy = energy[16:243]
+energy = energy.drop(energy.columns[:2], axis=1)
+energy = energy.rename(columns = {"Environmental Indicators: Energy" : "Country", "Unnamed: 3" : "Energy Supply", "Unnamed: 4" : 
+                                 "Energy Supply per Capita", "Unnamed: 5" : "% Renewable"})
+energy = energy.replace("...", np.nan)
+energy["Energy Supply"] = energy["Energy Supply"] * 1000000
+energy = energy.replace({"Republic of Korea" : "South Korea", "United States of America" : "United States", "United Kingdom of \
+                         Great Britain" : "United Kingdom", "China, Hong Kong Special Administrative Region" : "Hong Kong" , 
+                        "Bolivia (Plurinational State of)" : "Bolivia" , "Switzerland17" : "Switzerland", "Portugal13" : "Portugal", 
+                        "Australia1" : "Australia"})
