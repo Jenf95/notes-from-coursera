@@ -1,5 +1,6 @@
 np.random.binomial(1,0.5)
 
+
 #sampling the distribution
 chance_of_tornado = 0.01
 tornado_events = np.random.binomial(1, chance_of_tornado, 1000000)    
@@ -24,3 +25,4 @@ stats.skew(chi_squared_df2)
 from scipy import stats
 stats.ttest_ind(early['assignment1_grade'], late['assignment1_grade'])
 #compare two independent samples to see if they have different means
+
