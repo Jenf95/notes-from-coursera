@@ -25,7 +25,7 @@ pd.merge(staff_df, student_df, how='left', left_on='Name', right_on='Name')
 #above is doing join by column
 pd.merge(staff_df, student_df, how='inner', left_on=['First Name','Last Name'], right_on=['First Name','Last Name'])
 
-answer = pd.merge(products_df, invoices_df, how="left", Left_index="True", Right_on="Product ID")
+answer = pd.merge(products_df, invoices_df, how="left", left_index="True", right_on="Product ID")
 
 
 #Pandas Idioms
@@ -168,17 +168,69 @@ df.asfreq('W', method='ffill') #change frequency to weekly from bi-weekly, forwa
 
 
 
-import pandas as pd
-import numpy as np
+def answer_one():
+    import pandas as pd
+    import numpy as np
 
-energy = pd.read_excel("Energy Indicators.xls")
-energy = energy[16:243]
-energy = energy.drop(energy.columns[:2], axis=1)
-energy = energy.rename(columns = {"Environmental Indicators: Energy" : "Country", "Unnamed: 3" : "Energy Supply", "Unnamed: 4" : 
+    energy = pd.read_excel("Energy Indicators.xls")
+    energy = energy[16:243]
+    energy = energy.drop(energy.columns[:2], axis=1)
+    energy = energy.rename(columns = {"Environmental Indicators: Energy" : "Country", "Unnamed: 3" : "Energy Supply", "Unnamed: 4" : 
                                  "Energy Supply per Capita", "Unnamed: 5" : "% Renewable"})
-energy = energy.replace("...", np.nan)
-energy["Energy Supply"] = energy["Energy Supply"] * 1000000
-energy = energy.replace({"Republic of Korea" : "South Korea", "United States of America" : "United States", "United Kingdom of \
-                         Great Britain" : "United Kingdom", "China, Hong Kong Special Administrative Region" : "Hong Kong" , 
-                        "Bolivia (Plurinational State of)" : "Bolivia" , "Switzerland17" : "Switzerland", "Portugal13" : "Portugal", 
-                        "Australia1" : "Australia"})
+    energy = energy.replace("...", np.nan)
+    energy["Energy Supply"] = energy["Energy Supply"] * 1000000
+
+    for country in energy["Country"]:
+        if country[-1].isdigit() & country[-2].isdigit():
+            energy = energy.replace(country, (country[:-2]))
+        elif country [-1].isdigit():
+            energy = energy.replace(country, (country[:-1]))
+        else:
+            False
+    energy = energy.replace({"Republic of Korea" : "South Korea", "United States of America" : "United States", "United Kingdom of Great Britain and Northern Ireland" : "United Kingdom", "China, Hong Kong Special Administrative Region" : "Hong Kong" , 
+                        "Bolivia (Plurinational State of)" : "Bolivia" , "Iran (Islamic Republic of)" : "Iran"})
+
+    GDP = pd.read_csv("world_bank.csv")
+    GDP =GDP[4:]
+    GDP = GDP.replace({"Korea, Rep." : "South Korea", "Iran, Islamic Rep." : "Iran", "Hong Kong SAR, China":"Hong Kong"})
+
+    ScimEn = pd.read_excel("scimagojr-3.xlsx")
+
+    GDP = GDP.rename(columns = {"Unnamed: 48" : "2006" , "Unnamed: 49" : "2007" , "Unnamed: 50" : "2008" , "Unnamed: 51" : "2009" , 
+                            "Unnamed: 52" : "2010" , "Unnamed: 53" : "2011" , "Unnamed: 54" : "2012"  ,"Unnamed: 55" : "2013",
+                            "Unnamed: 56" : "2014","Unnamed: 57" : "2015"})
+    GDP = GDP.drop(GDP.columns[58:], axis = 1)
+    GDP = GDP.drop(GDP.columns[1:48], axis = 1)
+    GDP = GDP.rename(columns = {"Data Source" : "Country"})
+
+    df = pd.merge(energy, GDP, how="outer", left_on="Country", right_on = "Country")
+    ANSWER = pd.merge(df, ScimEn, how = "outer", left_on="Country", right_on = "Country")
+    ANSWER = ANSWER.sort_values(by="Rank")
+    ANSWER = ANSWER[:15]
+    ANSWER = ANSWER.set_index("Country")
+    return ANSWER
+
+answer_one()
+
+#String Manipulation see notebook
+
+def answer_three():
+    def avg(row):
+        data = row[["2006", "2007", "2008", "2009", "2010","2011","2012","2013","2014","2015"]]
+        row["avgGDP"] = np.average(data)
+        return row
+    Top15 = ANSWER.apply(avg, axis = 1)
+    Top15.sort_values(by="avgGDP", ascending = False)
+    return Top15["avgGDP"]
+answer_three()
+
+
+
+
+#wrong stuff
+def digit_sum(n):
+  string = str(n)
+  total = 0
+  for digit in string:
+    total = total + int(string(digit))
+  return total
