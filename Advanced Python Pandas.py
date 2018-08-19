@@ -273,7 +273,23 @@ def answer_seven():
     return Top15.index[2]
 
 
- 
+def answer_nine():
+    Top15 = answer_one()
+    Top15["Population"] = Top15["Energy Supply"] / Top15["Energy Supply per Capita"]
+    Top15["Citable docs per Capita"] = Top15["Citable documents"] / Top15["Population"]
+    return Top15[["Energy Supply per Capita", "Citable docs per Capita"]].corr().ix["Energy Supply per Capita", "Citable docs per Capita"] 
+
+
+
+def plot9():
+    import matplotlib as plt
+    %matplotlib inline
+    
+    Top15 = answer_one()
+    Top15['PopEst'] = Top15['Energy Supply'] / Top15['Energy Supply per Capita']
+    Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
+    Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
+
 
 #wrong stuff
 def digit_sum(n):
