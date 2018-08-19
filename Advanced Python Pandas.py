@@ -225,6 +225,70 @@ def answer_three():
 answer_three()
 
 
+import pandas as pd
+import numpy as np
+
+top15 = answer_one()
+years = ["2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"]
+average = (top15[years].mean(axis=1)).sort_values(ascending=False).rename('avgGDP')
+
+def answer_three():
+    return average
+
+
+
+def answer_four():
+    def max_minus_min(row):
+        data = row[["2006", "2007", "2008", "2009", "2010","2011","2012","2013","2014","2015"]]
+        row["delta_GDP"] = np.max(data) - np.min(data)
+        return row
+    Top15_1 = Top15.apply(max_minus_min, axis = 1)
+     return top15_1.iloc[5]["delta_GDP"]
+answer_four()
+
+
+def answer_five():
+    Top15 = answer_one()
+    ans5 = Top15["Energy Supply per Capita"].mean()
+    return ans5
+
+
+
+def answer_six():
+    Top15 = answer_one()
+    x = (Top15["% Renewable"].idxmax(), Top15["% Renewable"].max())
+    return x
+
+
+def answer_seven():
+    Top15 = answer_one()
+    Top15["ratio"] = Top15["Self-citations"] / Top15["Citations"]
+    y = (Top15["ratio"].idxmax(), Top15["ratio"].max())
+    return y
+
+ def answer_eight():
+    Top15 = answer_one()
+    Top15["Population"] = Top15["Energy Supply"] / Top15["Energy Supply per Capita"] 
+    Top15 = Top15["Population"].sort_values(ascending=False)
+    return Top15.index[2]
+
+
+def answer_nine():
+    Top15 = answer_one()
+    Top15["Population"] = Top15["Energy Supply"] / Top15["Energy Supply per Capita"]
+    Top15["Citable docs per Capita"] = Top15["Citable documents"] / Top15["Population"]
+    return Top15[["Energy Supply per Capita", "Citable docs per Capita"]].corr().ix["Energy Supply per Capita", "Citable docs per Capita"] 
+
+
+
+def plot9():
+    import matplotlib as plt
+    %matplotlib inline
+    
+    Top15 = answer_one()
+    Top15['PopEst'] = Top15['Energy Supply'] / Top15['Energy Supply per Capita']
+    Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
+    Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
 
 
 #wrong stuff
