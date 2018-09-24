@@ -290,6 +290,24 @@ def plot9():
     Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
     Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
 
+    if Top15.iloc[i]["% Renewable"] > med is True:
+Top15.iloc[i]["HighRenew"] == 1
+else:
+Top15.iloc[i]["HighRenew"] == 0
+Top15 = Top15.sort_values(by = "HighRenew")
+
+
+def answer_ten():
+    Top15 = answer_one()
+    med = Top15["% Renewable"].median()
+    Top15["HighRenew"] = Top15["% Renewable"] >= med
+    Top15["HighRenew"] = Top15["HighRenew"].apply(lambda x:1 if x else 0)
+    Top15 =  Top15.sort_value(by = "% Renewable", acending=True)
+    return Top15["HighRenew"]
+
+answer_ten()
+
+
 
 #wrong stuff
 def digit_sum(n):
