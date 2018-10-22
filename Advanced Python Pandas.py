@@ -290,8 +290,10 @@ def plot9():
     Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
     Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
 
+
 import pandas as pd
 import numpy as np
+
 def answer_ten():
     Top15 = answer_one()
     med = Top15["% Renewable"].median()
@@ -329,6 +331,7 @@ def answer_thirteen():
     return Top15['PopEst'].apply(lambda x: '{0:,}'.format(x))
 answer_thirteen()
 #this put population numbers into numbers seperated by thousands seperator
+
 
 
 #wrong stuff
