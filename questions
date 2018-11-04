@@ -1,5 +1,5 @@
 #I want to delete all the rows in a dataframe that is February 29th from year 2005-2014
-#this is my code
+#this is my terrible code
 for time in df['Date']:
     if time[-5:] == '02-29':
         df.drop(df.iloc(df.index(time)))
