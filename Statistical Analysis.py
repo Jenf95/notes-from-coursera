@@ -26,3 +26,7 @@ from scipy import stats
 stats.ttest_ind(early['assignment1_grade'], late['assignment1_grade'])
 #compare two independent samples to see if they have different means
 
+
+#Assignment: University towns have their mean housing prices less effected by recessions. Run a t-test to compare the ratio of the mean 
+      #price of the houses in university towns the quarter before the recession starts compared to the receccion bottom 
+      #(price_ratio = quarter_before_recession/recession_bottom
