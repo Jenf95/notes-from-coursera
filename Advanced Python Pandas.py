@@ -290,22 +290,47 @@ def plot9():
     Top15['Citable docs per Capita'] = Top15['Citable documents'] / Top15['PopEst']
     Top15.plot(x='Citable docs per Capita', y='Energy Supply per Capita', kind='scatter', xlim=[0, 0.0006])
 
-    if Top15.iloc[i]["% Renewable"] > med is True:
-Top15.iloc[i]["HighRenew"] == 1
-else:
-Top15.iloc[i]["HighRenew"] == 0
-Top15 = Top15.sort_values(by = "HighRenew")
 
+import pandas as pd
+import numpy as np
 
 def answer_ten():
     Top15 = answer_one()
     med = Top15["% Renewable"].median()
     Top15["HighRenew"] = Top15["% Renewable"] >= med
     Top15["HighRenew"] = Top15["HighRenew"].apply(lambda x:1 if x else 0)
-    Top15 =  Top15.sort_value(by = "% Renewable", acending=True)
+    Top15.sort_values(by = "% Renewable", inplace=True)
     return Top15["HighRenew"]
 
-answer_ten()
+def answer_eleven():
+    Top15 = answer_one()
+    ContinentDict = {'China':'Asia','United States':'North America','Japan':'Asia','United Kingdom':'Europe','Canada':'North America',
+                    'Germany':'Europe','India':'Asia','France':'Europe','South Korea':'Asia','Italy':'Europe','Iran':'Asia','Spain':
+                    'Europe','Australia':'Australia','Brazil':'South America'}
+    eleven = pd.DataFrame(columns = ['size','sum','mean','std'])
+    Top15["Population"] = Top15["Energy Supply"] / Top15["Energy Supply per Capita"] 
+    for group, frame in Top15.groupby(ContinentDict):
+        eleven.loc[group] = [len(frame), frame['Population'].sum(), frame['Population'].mean(),frame['Population'].std()]
+    return eleven
+#returns a dataframe with continent as index, and size(number of countries in the continent), pop sum, pop mean, pop standard deviation
+
+def answer_twelve():
+    Top15 = answer_one()
+    Top15['bins']=pd.cut(Top15["% Renewable"], 5)
+    ContinentDict = {'China':'Asia','United States':'North America','Japan':'Asia','United Kingdom':'Europe','Canada':'North America',
+                    'Germany':'Europe','India':'Asia','France':'Europe','South Korea':'Asia','Italy':'Europe','Iran':'Asia','Spain':
+                    'Europe','Australia':'Australia','Brazil':'South America','Russian Federation':'Europe'}
+    Top15['Continent'] = [ContinentDict[country] for country in Top15.index]
+    return Top15.groupby(['Continent','bins']).size()
+
+answer_twelve()
+
+def answer_thirteen():
+    Top15 = answer_one()
+    Top15['PopEst']=(Top15['Energy Supply']/Top15['Energy Supply per Capita']).astype(float)
+    return Top15['PopEst'].apply(lambda x: '{0:,}'.format(x))
+answer_thirteen()
+#this put population numbers into numbers seperated by thousands seperator
 
 
 
