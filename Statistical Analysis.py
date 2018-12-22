@@ -30,3 +30,13 @@ stats.ttest_ind(early['assignment1_grade'], late['assignment1_grade'])
 #Assignment: University towns have their mean housing prices less effected by recessions. Run a t-test to compare the ratio of the mean 
       #price of the houses in university towns the quarter before the recession starts compared to the receccion bottom 
       #(price_ratio = quarter_before_recession/recession_bottom
+
+import pandas as pd
+import numpy as np
+from scipy.stats import ttest_ind
+
+#basic opening file method, not recommended for extensive use
+file = open('university_towns.txt','r')
+for line in file:
+    print(line,)
+#this print out every line in a seperate line
