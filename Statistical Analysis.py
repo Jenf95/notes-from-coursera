@@ -62,6 +62,40 @@ def get_list_of_university_towns():
 
 get_list_of_university_towns()
 
+def get_recession_start():
+    '''Returns the year and quarter of the recession start time as a 
+    string value in a format such as 2005q3'''
+    #use chained value in 2009 dollars, only look from 2000q1
+    #A recession is defined as starting with two consecutive quarters of GDP decline, 
+    #and ending with two consecutive quarters of GDP growth.
+    gdp = pd.read_excel("gdplev.xls")
+    gdp = gdp[219:]
+    gdp = gdp.drop(gdp.columns[:4], axis = 1 )
+    gdp = gdp.drop(gdp.columns[1], axis = 1)
+    gdp = gdp.drop(gdp.columns[2], axis = 1)
+    gdp = gdp.rename(columns = {"Unnamed: 4":"Year/Quarter", "Unnamed: 6" : "GDP in chained 2009 values"})
+    recession_start = []   
+    for i in range(2,len(gdp)):
+        if gdp.iloc[i-2][1] > gdp.iloc[i-1][1] and gdp.iloc[i-1][1] > gdp.iloc[i][1]:
+            recession_start.append(gdp.iloc[i-2]["Year/Quarter"])      
+    return recession_start[0]
+get_recession_start()
+
+def get_recession_end():
+    '''Returns the year and quarter of the recession end time as a 
+    string value in a format such as 2005q3'''
+    gdp = pd.read_excel("gdplev.xls")
+    gdp = gdp[219:]
+    gdp = gdp.drop(gdp.columns[:4], axis = 1 )
+    gdp = gdp.drop(gdp.columns[1], axis = 1)
+    gdp = gdp.drop(gdp.columns[2], axis = 1)
+    gdp = gdp.rename(columns = {"Unnamed: 4":"Year/Quarter", "Unnamed: 6" : "GDP in chained 2009 values"})
+    recession_end = []   
+    for i in range(len(gdp)-2):
+        if gdp.iloc[i][1] < gdp.iloc[i+1][1] and gdp.iloc[i+1][1] < gdp.iloc[i+2][1]:
+            recession_start.append(gdp.iloc[i+2]["Year/Quarter"])      
+    return recession_end[2]
+get_recession_end()
 
         
         
