@@ -113,8 +113,25 @@ def get_recession_bottom():
     return bottom
 
 
-get_recession_bottom()
+def convert_housing_data_to_quarters():
+    '''Converts the housing data to quarters and returns it as mean 
+    values in a dataframe. This dataframe should be a dataframe with
+    columns for 2000q1 through 2016q3, and should have a multi-index
+    in the shape of ["State","RegionName"].
+    
+    Note: Quarters are defined in the assignment description, they are
+    not arbitrary three month periods.
+    
+    The resulting dataframe should have 67 columns, and 10,730 rows.
+    '''
+    housing_price = pd.read_csv("City_Zhvi_AllHomes.csv")
+    housing_price = housing_price.drop(["RegionID", 'Metro', 'CountyName','SizeRank'], axis = 1)
+    housing_price['State'] = housing_price['State'].map(states)
+    housing_price.set_index(['State','RegionName'],inplace = True)
+    housing_price = housing_price.drop(housing_price.columns[0:45], axis = 1)
+    housing_price.columns = pd.to_datetime(housing_price.columns).to_period(freq="M")
+    housing_price = housing_price.groupby(housing_price.columns.asfreq("Q"),axis=1).mean() #group months by quarter and get average
+    housing_price.columns=housing_price.columns.to_series().astype(str) #change column name from period index to string
+    return housing_price
 
-        
-        
-
+convert_housing_data_to_quarters()
