@@ -97,6 +97,24 @@ def get_recession_end():
     return recession_end[2]
 get_recession_end()
 
+
+def get_recession_bottom():
+    '''Returns the year and quarter of the recession bottom time as a 
+    string value in a format such as 2005q3'''
+    #A recession bottom is the quarter within a recession which had the lowest GDP
+    gdp = pd.read_excel("gdplev.xls")
+    gdp = gdp[219:]
+    gdp = gdp.drop(gdp.columns[:4], axis = 1 )
+    gdp = gdp.drop(gdp.columns[1], axis = 1)
+    gdp = gdp.drop(gdp.columns[2], axis = 1)
+    gdp = gdp.rename(columns = {"Unnamed: 4":"Year/Quarter", "Unnamed: 6" : "GDP in chained 2009 values"})
+    gdp = gdp[33:40]
+    bottom = gdp.iloc[4][0]
+    return bottom
+
+
+get_recession_bottom()
+
         
         
 
