@@ -152,39 +152,22 @@ def run_ttest():
     value for better should be either "university town" or "non-university town"
     depending on which has a lower mean price ratio (which is equivilent to a
     reduced market loss).'''
+    #price_ratio=quarter_before_recession/recession_bottom   
+    start = pd.Period(get_recession_start())
+    bottom = pd.Period(get_recession_bottom())
+    recession_price = convert_housing_data_to_quarters().loc[:,[start,bottom]]
+    recession_price.columns = ["Start","Bottom"]
+    recession_price["Ratio"] = recession_price.Start / recepssion_price.Bottom 
+    recession_price = recession_price.dropna(axis=0,how="any")
+    college = get_list_of_university_towns().set_index(["State","RegionName"])
+    college["isUnv"] = "Yes"
+    result = pd.merge(recession_price,college,how="left",left_index=True,right_index=True)
+    result.isUnv = res.isUnv.fillna("No")
 
-    #price_ratio=quarter_before_recession/recession_bottom
-    recession_price = convert_housing_data_to_quarters().copy()
-    recession_price = recession_price.loc[:,'2008Q2':'2009Q4']
-    recession_price = recession_price.reset_index()
-    recession_price = recession_price.rename(columns = {'2008Q2':'2008q2', '2008Q3':'2008q3','2008Q4':'2008q4','2009Q1':'2009q1','2009Q2':'2009q2','2009Q3':'2009q3','2009Q4':'2009q4'})
-    def price_ratio(row):
-        return (row['2008q2'])/row['2009q2']
-    
-    recession_price['price_ratio'] = recession_price.apply(price_ratio,axis=1)
-    
-    #uni data  
-    uni_town = get_list_of_university_towns()['RegionName']
-    uni_town = set(uni_town)
-
-    def is_uni_town(row):
-        #check if the town is a university towns or not.
-        if row['RegionName'] in uni_town:
-            return 1
-        else:
-            return 0
-    recession_price['is_uni'] = recession_price.apply(is_uni_town,axis=1)
-    
-    
-    not_uni = recession_price[recession_price['is_uni']==0].loc[:,'price_ratio'].dropna()
-    is_uni  = recession_price[recession_price['is_uni']==1].loc[:,'price_ratio'].dropna()
-    def sort_region():
-        if not_uni.mean() < is_uni.mean():
-            return 'non-university town'
-        else:
-            return 'university town'
-    p_val = list(ttest_ind(not_uni, is_uni))[1]
-    result = (True,p_val,sort_region())
-    return result
-
-run_ttest()
+    result_u = result[result.isUnv == "Yes"].Ratio
+    result_n = res[result.isUnv == "No"].Ratio
+    #print(res_n)
+    _,p = stats.ttest_ind(result_u,result_n)
+    different = (True if p < 0.01 else False)
+    better = ("university town" if np.nanmean(res_u) < np.nanmean(res_n) else "non-university town")
+    return different, p, better
