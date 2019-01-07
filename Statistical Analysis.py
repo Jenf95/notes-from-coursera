@@ -132,6 +132,59 @@ def convert_housing_data_to_quarters():
     housing_price.columns = pd.to_datetime(housing_price.columns).to_period(freq="M")
     housing_price = housing_price.groupby(housing_price.columns.asfreq("Q"),axis=1).mean() #group months by quarter and get average
     housing_price.columns=housing_price.columns.to_series().astype(str) #change column name from period index to string
+    housing_price.columns = housing_price.columns.str.lower()
     return housing_price
 
 convert_housing_data_to_quarters()
+
+
+def run_ttest():
+    '''First creates new data showing the decline or growth of housing prices
+    between the recession start and the recession bottom. Then runs a ttest
+    comparing the university town values to the non-university towns values, 
+    return whether the alternative hypothesis (that the two groups are the same)
+    is true or not as well as the p-value of the confidence. 
+    
+    Return the tuple (different, p, better) where different=True if the t-test is
+    True at a p<0.01 (we reject the null hypothesis), or different=False if 
+    otherwise (we cannot reject the null hypothesis). The variable p should
+    be equal to the exact p value returned from scipy.stats.ttest_ind(). The
+    value for better should be either "university town" or "non-university town"
+    depending on which has a lower mean price ratio (which is equivilent to a
+    reduced market loss).'''
+
+    #price_ratio=quarter_before_recession/recession_bottom
+    recession_price = convert_housing_data_to_quarters().copy()
+    recession_price = recession_price.loc[:,'2008Q2':'2009Q4']
+    recession_price = recession_price.reset_index()
+    recession_price = recession_price.rename(columns = {'2008Q2':'2008q2', '2008Q3':'2008q3','2008Q4':'2008q4','2009Q1':'2009q1','2009Q2':'2009q2','2009Q3':'2009q3','2009Q4':'2009q4'})
+    def price_ratio(row):
+        return (row['2008q2'])/row['2009q2']
+    
+    recession_price['price_ratio'] = recession_price.apply(price_ratio,axis=1)
+    
+    #uni data  
+    uni_town = get_list_of_university_towns()['RegionName']
+    uni_town = set(uni_town)
+
+    def is_uni_town(row):
+        #check if the town is a university towns or not.
+        if row['RegionName'] in uni_town:
+            return 1
+        else:
+            return 0
+    recession_price['is_uni'] = recession_price.apply(is_uni_town,axis=1)
+    
+    
+    not_uni = recession_price[recession_price['is_uni']==0].loc[:,'price_ratio'].dropna()
+    is_uni  = recession_price[recession_price['is_uni']==1].loc[:,'price_ratio'].dropna()
+    def sort_region():
+        if not_uni.mean() < is_uni.mean():
+            return 'non-university town'
+        else:
+            return 'university town'
+    p_val = list(ttest_ind(not_uni, is_uni))[1]
+    result = (True,p_val,sort_region())
+    return result
+
+run_ttest()
