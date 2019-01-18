@@ -152,22 +152,21 @@ def run_ttest():
     value for better should be either "university town" or "non-university town"
     depending on which has a lower mean price ratio (which is equivilent to a
     reduced market loss).'''
-    #price_ratio=quarter_before_recession/recession_bottom   
-    start = pd.Period(get_recession_start())
-    bottom = pd.Period(get_recession_bottom())
-    recession_price = convert_housing_data_to_quarters().loc[:,[start,bottom]]
+    recession_price = convert_housing_data_to_quarters().loc[:,["2008q3","2009q4"]]
     recession_price.columns = ["Start","Bottom"]
-    recession_price["Ratio"] = recession_price.Start / recepssion_price.Bottom 
+    recession_price["Ratio"] = recession_price.Start / recession_price.Bottom 
     recession_price = recession_price.dropna(axis=0,how="any")
     college = get_list_of_university_towns().set_index(["State","RegionName"])
     college["isUnv"] = "Yes"
     result = pd.merge(recession_price,college,how="left",left_index=True,right_index=True)
-    result.isUnv = res.isUnv.fillna("No")
+    result.isUnv = result.isUnv.fillna("No")
 
     result_u = result[result.isUnv == "Yes"].Ratio
-    result_n = res[result.isUnv == "No"].Ratio
+    result_n = result[result.isUnv == "No"].Ratio
     #print(res_n)
     _,p = stats.ttest_ind(result_u,result_n)
     different = (True if p < 0.01 else False)
-    better = ("university town" if np.nanmean(res_u) < np.nanmean(res_n) else "non-university town")
+    better = ("university town" if np.nanmean(result_u) < np.nanmean(result_n) else "non-university town")
     return different, p, better
+
+run_ttest()
