@@ -42,3 +42,8 @@ knn = KNeighborsClassifier(n_neighbors = 5)
 knn.fit(X_train, y_train)
 #ESTIMATE THE ACCURACY OF THE CLASSIFIER ON FUTURE DATA, USING THE TEST DATA
 knn.score(X_test, y_test)
+
+#PREDICT UNSEEN OBJECTS
+fruit_prediction - knn.predict([[20,4.3,5.5]])
+lookup_fruit_name[fruit_prediction[0]]
+
