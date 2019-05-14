@@ -47,3 +47,29 @@ knn.score(X_test, y_test)
 fruit_prediction - knn.predict([[20,4.3,5.5]])
 lookup_fruit_name[fruit_prediction[0]]
 
+
+
+#------------------------------------------#
+#HOMEWORK
+from sklearn.datasets import load_breast_cancer
+cancer = load_breast_cancer()
+print(cancer.DESCR)
+
+def answer_one():
+    columns_names = ['mean radius', 'mean texture', 'mean perimeter', 'mean area',
+               'mean smoothness', 'mean compactness', 'mean concavity',
+               'mean concave points', 'mean symmetry', 'mean fractal dimension',
+               'radius error', 'texture error', 'perimeter error', 'area error',
+               'smoothness error', 'compactness error', 'concavity error',
+               'concave points error', 'symmetry error', 'fractal dimension error',
+               'worst radius', 'worst texture', 'worst perimeter', 'worst area',
+               'worst smoothness', 'worst compactness', 'worst concavity',
+               'worst concave points', 'worst symmetry', 'worst fractal dimension']
+    df_cancer = pd.DataFrame(cancer['data'],index=pd.RangeIndex(start=0, stop=569, step=1), columns = columns_names)
+    df_cancer['target']=pd.DataFrame(cancer['target'])
+    return df_cancer
+#convert the sklearn.dataset cancer to a dataframe
+#you don't need to convert to a pd dataframe to train a sklearn model, but it is easier for data munging
+
+
+
