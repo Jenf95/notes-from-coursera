@@ -48,3 +48,37 @@ Parameter alpha in the function controls L1 penalty (default = 1.0)
 Ridge vs. Lasso:
 - Many small to medium sized effects: use Ridge
 - Only a few variables with medium/large effect: Use Lasso
+'''
+from sklearn.linear_model import Lasso
+from sklearn.preprocessing import MinMaxScaler
+scaler = MinMaxScaler()
+X_train, X_test, y_train, y_test = train_test_split(X_crime, y_crime, random_state = 0)
+X_train_scaled = scaler.fit_transform(X_train)
+X_test_scaled = scaler.transform(X_test)
+linlasso = Lasso(alpha = 2.0, max_iter=10000).fit(X_train_scaled,y_train)
+#increasing the max_iter value will increase the computation time accordingly; typically at least 20000
+linear_model_intercept = linlasso.intercept_
+linear_model_coefficient = linlasso.coef_
+non_zero_features = np.sum(linlasso.coef_ != 0)
+score_training = linlasso.score(X_train_scaled,y_train)
+score_test = linlasso.score(X_test_scaled,y_test)
+
+#Polynomial Features with Linear Regression
+'''
+- Generate new features consisting of all polynomial combinations of the original two features (x0, x1)
+- the degree of the polynomial specifies how many variables participate at a time in each new feature
+  (above example the degree would be 2)
+- still a linear model, and can use the same least-squares estimation method for w and b
+- why? to capture interactions between the original features by adding them as features to the linear model
+- In practice, polynomial feature expansion is often combined with a regularized learning method like
+  ridge regression
+'''
+from sklearn.linear_model import LinearRegression
+from sklearn.linear_model import Ridge
+from sklearn.preprocessing import PolynomialFeatures
+X_train,y_train,X_test,y_test = train_test_split(X_F1, y_F1, random_state=0)
+linreg = LinearRegression.fit(X_train, y_train)
+poly = PolynomialFeatures(degree=2)
+X_F1_poly = poly.fit_transform(X_F1)
+X_train, y_train, X_test, y_test = train_test_split(X_F1_poly, y_F1, random_state=0)
+linreg=LinearRegression.fit(X_train, y_train)
