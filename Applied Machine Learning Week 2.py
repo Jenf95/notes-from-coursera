@@ -82,3 +82,4 @@ poly = PolynomialFeatures(degree=2)
 X_F1_poly = poly.fit_transform(X_F1)
 X_train, y_train, X_test, y_test = train_test_split(X_F1_poly, y_F1, random_state=0)
 linreg=LinearRegression.fit(X_train, y_train)
+
